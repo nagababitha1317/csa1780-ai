@@ -1,0 +1,58 @@
+import itertools
+import math
+
+
+# Function to calculate the distance between two points
+def calculate_distance(city1, city2):
+    return math.dist(city1, city2)
+
+
+# Function to calculate the total distance for a given path
+def total_distance(path, cities):
+    dist = 0
+    for i in range(len(path) - 1):
+        dist += calculate_distance(cities[path[i]], cities[path[i + 1]])
+    # Add distance from the last city back to the first city
+    dist += calculate_distance(cities[path[-1]], cities[path[0]])
+    return dist
+
+
+# Function to solve the TSP using brute force approach
+def traveling_salesman_bruteforce(cities):
+    # Generate all permutations of city indices (except the starting city)
+    num_cities = len(cities)
+    city_indices = list(range(num_cities))
+
+    # List to store all possible permutations of cities (excluding the first one)
+    permutations = itertools.permutations(city_indices[1:])
+
+    # Initialize variables to track the shortest path and its distance
+    min_distance = float('inf')
+    best_path = None
+
+    # Check each permutation
+    for perm in permutations:
+        # Add the starting city at the beginning of the path
+        path = [city_indices[0]] + list(perm)
+
+        # Calculate the total distance of the current path
+        dist = total_distance(path, cities)
+
+        # If this path is the shortest, update the best path and distance
+        if dist < min_distance:
+            min_distance = dist
+            best_path = path
+
+    return best_path, min_distance
+
+
+# Example usage
+if __name__ == "__main__":
+    # Define coordinates for each city
+    cities = [(0, 0), (1, 2), (3, 1), (5, 4)]  # List of (x, y) coordinates
+
+    # Solve the TSP problem using brute force
+    best_path, min_distance = traveling_salesman_bruteforce(cities)
+
+    print("Best path:", best_path)
+    print("Minimum distance:", min_distance)
