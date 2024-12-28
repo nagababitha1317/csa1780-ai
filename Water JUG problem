@@ -1,0 +1,46 @@
+from collections import deque
+
+def water_jug_problem(jug1_capacity, jug2_capacity, target):
+    visited = set()  # To track visited states
+    queue = deque()  # Queue for BFS
+    queue.append((0, 0))  # Initial state (both jugs are empty)
+    
+    while queue:
+        current = queue.popleft()
+        jug1, jug2 = current
+        
+        # If we reach the target in any of the jugs
+        if jug1 == target or jug2 == target:
+            return f"Solution found: {current}"
+        
+        # Skip if the state is already visited
+        if current in visited:
+            continue
+        
+        visited.add(current)
+        
+        # Possible actions:
+        # 1. Fill Jug 1
+        queue.append((jug1_capacity, jug2))
+        # 2. Fill Jug 2
+        queue.append((jug1, jug2_capacity))
+        # 3. Empty Jug 1
+        queue.append((0, jug2))
+        # 4. Empty Jug 2
+        queue.append((jug1, 0))
+        # 5. Pour Jug 1 -> Jug 2
+        pour_to_jug2 = min(jug1, jug2_capacity - jug2)
+        queue.append((jug1 - pour_to_jug2, jug2 + pour_to_jug2))
+        # 6. Pour Jug 2 -> Jug 1
+        pour_to_jug1 = min(jug2, jug1_capacity - jug1)
+        queue.append((jug1 + pour_to_jug1, jug2 - pour_to_jug1))
+    
+    return "No solution found"
+
+# Example Usage
+jug1_capacity = 4  # Capacity of jug 1
+jug2_capacity = 3  # Capacity of jug 2
+target = 2         # Desired amount of water
+
+result = water_jug_problem(jug1_capacity, jug2_capacity, target)
+print(result)
