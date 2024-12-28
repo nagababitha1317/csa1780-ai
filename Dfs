@@ -1,0 +1,27 @@
+def dfs_iterative(graph, start):
+    visited = set()  # To track visited nodes
+    stack = [start]  # Initialize stack with the starting node
+
+    while stack:
+        node = stack.pop()  # Get the last node added to the stack
+        if node not in visited:
+            visited.add(node)  # Mark node as visited
+            print(node, end=" ")  # Process the node (Here, we just print it)
+            
+            # Add unvisited neighbors to the stack (in reverse order for correct DFS order)
+            for neighbor in reversed(graph[node]):
+                if neighbor not in visited:
+                    stack.append(neighbor)
+
+# Example Usage
+graph = {
+    0: [1, 2],
+    1: [0, 3, 4],
+    2: [0, 4],
+    3: [1],
+    4: [1, 2]
+}
+
+# Start DFS traversal from node 0
+print("DFS Iterative Traversal starting from node 0:")
+dfs_iterative(graph, 0)
