@@ -1,0 +1,72 @@
+import heapq
+
+
+# A* algorithm to find the shortest path
+def a_star(start, goal, graph, heuristic):
+    # Open list (priority queue) to store nodes to be explored
+    open_list = []
+    heapq.heappush(open_list, (0 + heuristic[start], start))  # (f, node)
+
+    # Dictionary to store the cost from start to each node (g)
+    g_costs = {start: 0}
+
+    # Dictionary to store the best path from start to each node (came from)
+    came_from = {}
+
+    while open_list:
+        # Get the node with the lowest f(n) value
+        _, current_node = heapq.heappop(open_list)
+
+        # If we reached the goal, reconstruct the path
+        if current_node == goal:
+            path = []
+            while current_node in came_from:
+                path.append(current_node)
+                current_node = came_from[current_node]
+            path.append(start)
+            path.reverse()  # Reverse the path to get the correct order
+            return path, g_costs[goal]
+
+        # Explore the neighbors of the current node
+        for neighbor, weight in graph[current_node].items():
+            tentative_g_cost = g_costs[current_node] + weight
+
+            # If the neighbor has not been visited or found a cheaper path to the neighbor
+            if neighbor not in g_costs or tentative_g_cost < g_costs[neighbor]:
+                g_costs[neighbor] = tentative_g_cost
+                f_cost = tentative_g_cost + heuristic[neighbor]
+                heapq.heappush(open_list, (f_cost, neighbor))
+                came_from[neighbor] = current_node
+
+    return None, float('inf')  # If no path is found
+
+
+# Example usage
+if __name__ == "__main__":
+    # Example graph as an adjacency list
+    graph = {
+        'A': {'B': 1, 'C': 4},
+        'B': {'A': 1, 'C': 2, 'D': 5},
+        'C': {'A': 4, 'B': 2, 'D': 1},
+        'D': {'B': 5, 'C': 1}
+    }
+
+    # Heuristic values for each node (example, using Manhattan distance or any appropriate heuristic)
+    heuristic = {
+        'A': 7,  # Estimated distance from A to goal
+        'B': 6,  # Estimated distance from B to goal
+        'C': 2,  # Estimated distance from C to goal
+        'D': 0  # Goal node (D), heuristic = 0
+    }
+
+    start_node = 'A'
+    goal_node = 'D'
+
+    # Run the A* algorithm
+    path, cost = a_star(start_node, goal_node, graph, heuristic)
+
+    if path:
+        print("Shortest Path:", path)
+        print("Total Cost:", cost)
+    else:
+        print("No path found")
