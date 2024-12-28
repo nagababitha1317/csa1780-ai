@@ -1,0 +1,38 @@
+from collections import deque
+
+def vacuum_cleaner(grid, start):
+    rows, cols = len(grid), len(grid[0])
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # Right, Down, Left, Up
+    visited = set()
+    queue = deque([(start, 0, grid)])  # (current_position, steps, current_grid)
+
+    while queue:
+        (x, y), steps, current_grid = queue.popleft()
+
+        # Check if all cells are clean
+        if all(all(cell == 0 for cell in row) for row in current_grid):
+            return f"All cells cleaned in {steps} steps!"
+
+        # Mark current cell as clean
+        if current_grid[x][y] == 1:
+            current_grid[x][y] = 0
+
+        # Visit neighboring cells
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < rows and 0 <= ny < cols and (nx, ny) not in visited:
+                visited.add((nx, ny))
+                queue.append(((nx, ny), steps + 1, [row[:] for row in current_grid]))
+
+    return "No solution found."
+
+# Example Usage
+grid = [
+    [1, 1, 0],
+    [1, 0, 1],
+    [0, 1, 1]
+]  # 1 represents dirty, 0 represents clean
+start = (0, 0)
+
+result = vacuum_cleaner(grid, start)
+print(result)
