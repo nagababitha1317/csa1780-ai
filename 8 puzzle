@@ -1,0 +1,97 @@
+import heapq
+
+# Define the goal state of the puzzle
+goal_state = ((1, 2, 3), (4, 5, 6), (7, 8, 0))  # 0 represents the empty space
+
+# Directions for possible moves (up, down, left, right)
+moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # (dx, dy) -> Up, Down, Left, Right
+
+
+# Function to compute Manhattan distance heuristic
+def manhattan_distance(state, goal=goal_state):
+    distance = 0
+    # Creating a dictionary of goal positions for faster lookup
+    goal_positions = {}
+    for r in range(3):
+        for c in range(3):
+            goal_positions[goal[r][c]] = (r, c)
+
+    # Calculate the Manhattan distance for each tile
+    for r in range(3):
+        for c in range(3):
+            value = state[r][c]
+            if value != 0:  # Skip the empty space
+                goal_r, goal_c = goal_positions[value]
+                distance += abs(r - goal_r) + abs(c - goal_c)
+
+    return distance
+
+
+# Function to get the valid moves and the new state after each move
+def get_neighbors(state):
+    # Find the position of the blank space (0)
+    blank_pos = next((r, c) for r in range(3) for c in range(3) if state[r][c] == 0)
+    r, c = blank_pos
+    neighbors = []
+
+    # Try all possible moves
+    for dr, dc in moves:
+        nr, nc = r + dr, c + dc
+        if 0 <= nr < 3 and 0 <= nc < 3:
+            # Make the new state by swapping the blank with the adjacent tile
+            new_state = [list(row) for row in state]
+            new_state[r][c], new_state[nr][nc] = new_state[nr][nc], new_state[r][c]
+            neighbors.append((tuple(tuple(row) for row in new_state), (nr, nc)))
+
+    return neighbors
+
+
+# A* algorithm for solving the puzzle
+def a_star(initial_state):
+    # The priority queue for A* (stores (cost, state, path))
+    open_list = []
+    heapq.heappush(open_list, (manhattan_distance(initial_state), initial_state, []))
+
+    # Set of visited states to avoid revisiting
+    visited = set()
+    visited.add(initial_state)
+
+    while open_list:
+        # Get the state with the lowest cost
+        _, current_state, path = heapq.heappop(open_list)
+
+        # If we reach the goal, return the solution path
+        if current_state == goal_state:
+            return path
+
+        # Get all valid neighbors
+        for neighbor, _ in get_neighbors(current_state):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                new_path = path + [neighbor]
+                # Calculate the heuristic cost and push to the open list
+                heapq.heappush(open_list, (len(new_path) + manhattan_distance(neighbor), neighbor, new_path))
+
+    return None  # If no solution is found
+
+
+# Function to print the puzzle state
+def print_puzzle(state):
+    for row in state:
+        print(row)
+    print()
+
+
+# Example usage
+if __name__ == "__main__":
+    initial_state = ((1, 2, 3), (4, 5, 6), (7, 0, 8))  # Example scrambled state
+    print("Initial State:")
+    print_puzzle(initial_state)
+
+    solution_path = a_star(initial_state)
+    if solution_path:
+        print("Solution Path:")
+        for step in solution_path:
+            print_puzzle(step)
+    else:
+        print("No solution found!")
