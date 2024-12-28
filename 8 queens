@@ -1,0 +1,45 @@
+def is_safe(board, row, col):
+    # Check if the column or diagonals are under attack
+    for i in range(row):
+        if board[i] == col or abs(board[i] - col) == row - i:
+            return False
+    return True
+
+
+def solve(board, row, solutions, max_solutions):
+    if row == len(board):  # All queens are placed
+        solutions.append(board[:])  # Add the solution to the list
+        if len(solutions) >= max_solutions:  # Stop if we have reached the desired number of solutions
+            return True
+        return False
+
+    for col in range(len(board)):
+        if is_safe(board, row, col):
+            board[row] = col  # Place queen
+            if solve(board, row + 1, solutions, max_solutions):  # Recur for the next row
+                return True  # Return immediately once the max number of solutions is found
+            board[row] = -1  # Backtrack
+
+    return False
+
+
+def print_solution(solution):
+    for row in solution:
+        print(' '.join('Q' if col == row else '.' for col in range(len(solution))))
+    print()
+
+
+def solve_8_queens(max_solutions=6):
+    board = [-1] * 8  # Initialize board with -1 (no queens placed)
+    solutions = []
+    solve(board, 0, solutions, max_solutions)  # Start solving from the first row
+
+    print(f"Total Solutions: {len(solutions)}\n")
+    for i, solution in enumerate(solutions):
+        print(f"Solution {i + 1}:")
+        print_solution(solution)
+
+
+# Example usage
+if __name__ == "__main__":
+    solve_8_queens(max_solutions=6)  # Set the maximum solutions to 6
