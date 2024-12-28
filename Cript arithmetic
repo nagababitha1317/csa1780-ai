@@ -1,0 +1,40 @@
+from itertools import permutations
+
+def solve_cryptarithmetic(equation):
+    # Extract unique letters
+    words = equation.replace('+', '').replace('=', '').split()
+    unique_letters = set("".join(words))
+    
+    if len(unique_letters) > 10:
+        return "Too many unique letters! Cannot map to digits."
+    
+    # Try all permutations of digits for the unique letters
+    for perm in permutations(range(10), len(unique_letters)):
+        letter_to_digit = dict(zip(unique_letters, perm))
+        
+        # Check for leading zeroes in any word
+        if any(letter_to_digit[word[0]] == 0 for word in words):
+            continue
+        
+        # Evaluate the equation
+        transformed_words = ["".join(str(letter_to_digit[char]) for char in word) for word in words]
+        numbers = list(map(int, transformed_words))
+        if sum(numbers[:-1]) == numbers[-1]:
+            return {
+                "solution": letter_to_digit,
+                "words": transformed_words,
+                "numbers": numbers
+            }
+    
+    return "No solution found."
+
+# Example Usage
+equation = "SEND + MORE = MONEY"
+result = solve_cryptarithmetic(equation)
+if isinstance(result, dict):
+    print("Solution Found!")
+    print("Mapping:", result["solution"])
+    print("Words:", result["words"])
+    print("Numbers:", result["numbers"])
+else:
+    print(result)
