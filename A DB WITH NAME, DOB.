@@ -1,0 +1,21 @@
+% Facts: A database of people with their names and dates of birth (DOB)
+% person(Name, DOB).
+person('Alice', '1990-05-01').
+person('Bob', '1985-09-23').
+person('Charlie', '1992-12-15').
+person('David', '1980-03-30').
+person('Eve', '1995-11-05').
+
+% Rule to find someone's date of birth by name
+find_dob(Name, DOB) :-
+    person(Name, DOB).
+
+% Example query to get all people in the database
+all_people :-
+    person(Name, DOB),
+    write(Name), write(': '), write(DOB), nl, fail.
+all_people.
+
+% Initialization goal
+:- initialization(all_people).
+
