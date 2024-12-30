@@ -1,0 +1,16 @@
+% Base case: The sum of integers from 1 to 1 is 1.
+sum(1, 1).
+
+% Recursive case: Sum of integers from 1 to N is N + sum of integers from 1 to N-1.
+sum(N, Total) :-
+    N > 1,                % Ensure N is greater than 1
+    N1 is N - 1,          % Calculate N-1
+    sum(N1, PartialTotal), % Recursive call for N-1
+    Total is N + PartialTotal. % Total is N plus the sum of the previous numbers
+
+% Initialization goal
+:- initialization(main).
+
+main :-
+    sum(5, Total),       % Query sum of integers from 1 to 5
+    write('Total sum is: '), write(Total), nl.
