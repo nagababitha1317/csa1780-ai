@@ -1,0 +1,141 @@
+import random
+import math
+
+
+# Sigmoid activation function
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+
+# Derivative of Sigmoid function
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+
+# Mean Squared Error (MSE) Loss function
+def mean_squared_error(y_true, y_pred):
+    return sum((y_true[i] - y_pred[i]) ** 2 for i in range(len(y_true))) / len(y_true)
+
+
+# Matrix multiplication
+def dot_product(A, B):
+    return [[sum(a * b for a, b in zip(A_row, B_col)) for B_col in zip(*B)] for A_row in A]
+
+
+# Matrix transpose
+def transpose(matrix):
+    return list(map(list, zip(*matrix)))
+
+
+# Feedforward Neural Network Class
+class FeedForwardNN:
+    def __init__(self, input_size, hidden_size, output_size):
+        # Initialize weights and biases
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+
+        # Weights initialization
+        self.weights_input_hidden = [[random.random() for _ in range(self.hidden_size)] for _ in
+                                     range(self.input_size)]  # Input to hidden
+        self.weights_hidden_output = [[random.random() for _ in range(self.output_size)] for _ in
+                                      range(self.hidden_size)]  # Hidden to output
+
+        # Bias initialization
+        self.bias_hidden = [0 for _ in range(self.hidden_size)]
+        self.bias_output = [0 for _ in range(self.output_size)]
+
+    def forward(self, X):
+        # Forward propagation
+
+        # Hidden layer input
+        self.hidden_input = [
+            sum(X[i] * self.weights_input_hidden[i][j] for i in range(self.input_size)) + self.bias_hidden[j] for j in
+            range(self.hidden_size)]
+
+        # Hidden layer output (applying sigmoid)
+        self.hidden_output = [sigmoid(x) for x in self.hidden_input]
+
+        # Output layer input
+        self.output_input = [
+            sum(self.hidden_output[i] * self.weights_hidden_output[i][j] for i in range(self.hidden_size)) +
+            self.bias_output[j] for j in range(self.output_size)]
+
+        # Output layer output (applying sigmoid)
+        self.output = [sigmoid(x) for x in self.output_input]
+
+        return self.output
+
+    def backward(self, X, y, learning_rate):
+        # Backward propagation (gradient descent)
+
+        # Error at the output layer
+        output_error = [self.output[i] - y[i] for i in range(self.output_size)]
+        output_delta = [output_error[i] * sigmoid_derivative(self.output[i]) for i in range(self.output_size)]
+
+        # Error at the hidden layer
+        hidden_error = [sum(output_delta[j] * self.weights_hidden_output[i][j] for j in range(self.output_size)) for i
+                        in range(self.hidden_size)]
+        hidden_delta = [hidden_error[i] * sigmoid_derivative(self.hidden_output[i]) for i in range(self.hidden_size)]
+
+        # Update weights and biases
+        # Update weights_hidden_output
+        for i in range(self.hidden_size):
+            for j in range(self.output_size):
+                self.weights_hidden_output[i][j] -= self.hidden_output[i] * output_delta[j] * learning_rate
+
+        # Update bias_output
+        for j in range(self.output_size):
+            self.bias_output[j] -= output_delta[j] * learning_rate
+
+        # Update weights_input_hidden
+        for i in range(self.input_size):
+            for j in range(self.hidden_size):
+                self.weights_input_hidden[i][j] -= X[i] * hidden_delta[j] * learning_rate
+
+        # Update bias_hidden
+        for j in range(self.hidden_size):
+            self.bias_hidden[j] -= hidden_delta[j] * learning_rate
+
+    def train(self, X, y, epochs, learning_rate):
+        # Training the neural network
+        for epoch in range(epochs):
+            for i in range(len(X)):
+                self.forward(X[i])  # Perform forward propagation
+                self.backward(X[i], y[i], learning_rate)  # Perform backpropagation
+
+            if epoch % 100 == 0:  # Print the loss every 100 epochs
+                loss = mean_squared_error(y, [self.forward(x) for x in X])
+                print(f"Epoch {epoch}, Loss: {loss}")
+
+
+# Sample dataset (XOR Problem)
+X = [
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+]
+
+y = [
+    [0],  # XOR output
+    [1],
+    [1],
+    [0]
+]
+
+# Initialize and train the neural network
+input_size = 2  # Number of input features
+hidden_size = 4  # Number of neurons in the hidden layer
+output_size = 1  # Output size (for XOR problem, it's a single value)
+
+# Create a FeedForwardNN instance
+nn = FeedForwardNN(input_size, hidden_size, output_size)
+
+# Train the network
+nn.train(X, y, epochs=10000, learning_rate=0.1)
+
+# Test the trained neural network
+print("Predictions after training:")
+for x in X:
+    print(nn.forward(x))  # Output the predictions for the training data
