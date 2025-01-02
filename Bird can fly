@@ -1,0 +1,21 @@
+% Facts about birds and their ability to fly
+can_fly(eagle).
+can_fly(parrot).
+can_fly(sparrow).
+can_fly(owl).
+
+% Facts about birds that cannot fly
+cannot_fly(penguin).
+cannot_fly(ostrich).
+cannot_fly(kangaroo).
+
+% Rule to check if a bird can fly
+can_bird_fly(Bird) :-
+    can_fly(Bird),
+    write(Bird), write(' can fly.').
+
+can_bird_fly(Bird) :-
+    cannot_fly(Bird),
+    write(Bird), write(' cannot fly.').
+
+% Queries
