@@ -1,0 +1,29 @@
+% Facts: Define diseases and recommended diets.
+diet(diabetes, [low_sugar, high_fiber, low_glycemic]).
+diet(hypertension, [low_sodium, high_potassium, low_fat]).
+diet(obesity, [low_calorie, high_protein, low_fat]).
+diet(heart_disease, [low_cholesterol, high_omega3, high_fiber]).
+diet(kidney_disease, [low_sodium, low_potassium, controlled_protein]).
+
+% Facts: Define food items for each diet type.
+food(low_sugar, [broccoli, spinach, chicken, almonds]).
+food(high_fiber, [oats, lentils, apples, carrots]).
+food(low_glycemic, [quinoa, nuts, chickpeas, berries]).
+food(low_sodium, [bananas, apples, plain_rice, fish]).
+food(high_potassium, [potatoes, bananas, oranges, avocados]).
+food(low_fat, [grilled_chicken, turkey, tofu, green_beans]).
+food(low_calorie, [salad, cucumber, mushrooms, watermelon]).
+food(high_protein, [eggs, chicken_breast, beans, greek_yogurt]).
+food(low_cholesterol, [oats, nuts, tofu, beans]).
+food(high_omega3, [salmon, flaxseeds, walnuts, mackerel]).
+food(controlled_protein, [small_fish, white_bread, egg_whites]).
+
+% Rule: Suggest a diet for a given disease.
+suggest_diet(Disease, Diet) :-
+    diet(Disease, Diet).
+
+% Rule: Suggest food items for a given diet type.
+suggest_food(Disease, Foods) :-
+    diet(Disease, Diet),
+    findall(FoodList, (member(Type, Diet), food(Type, FoodList)), FoodLists),
+    flatten(FoodLists, Foods).
