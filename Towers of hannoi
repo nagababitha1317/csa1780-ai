@@ -1,0 +1,18 @@
+% Base case: Moving 0 disks does nothing.
+hanoi(0, _, _, _) :- 
+    !.
+
+% Recursive case: Moving N disks from Source to Target using Auxiliary.
+hanoi(N, Source, Target, Auxiliary) :- 
+    N > 0,
+    M is N - 1,
+    % Move M disks from Source to Auxiliary using Target
+    hanoi(M, Source, Auxiliary, Target),
+    % Move the Nth disk from Source to Target
+    write('Move disk from '), 
+    write(Source), 
+    write(' to '), 
+    write(Target), 
+    nl,
+    % Move M disks from Auxiliary to Target using Source
+    hanoi(M, Auxiliary, Target, Source).
