@@ -1,0 +1,61 @@
+% Facts: Define family relationships.
+male(john).
+male(robert).
+male(charles).
+male(michael).
+
+female(mary).
+female(elizabeth).
+female(susan).
+female(linda).
+
+parent(john, robert).
+parent(john, mary).
+parent(elizabeth, robert).
+parent(elizabeth, mary).
+parent(robert, charles).
+parent(susan, charles).
+parent(mary, michael).
+parent(michael, linda).
+
+% Rules: Define relationships based on facts.
+
+% X is the father of Y if X is male and a parent of Y.
+father(X, Y) :-
+    male(X),
+    parent(X, Y).
+
+% X is the mother of Y if X is female and a parent of Y.
+mother(X, Y) :-
+    female(X),
+    parent(X, Y).
+
+% X is the sibling of Y if they share at least one parent and are not the same person.
+sibling(X, Y) :-
+    parent(Z, X),
+    parent(Z, Y),
+    X \= Y.
+
+% X is the grandfather of Y if X is male and the parent of Y's parent.
+grandfather(X, Y) :-
+    male(X),
+    parent(X, Z),
+    parent(Z, Y).
+
+% X is the grandmother of Y if X is female and the parent of Y's parent.
+grandmother(X, Y) :-
+    female(X),
+    parent(X, Z),
+    parent(Z, Y).
+
+% X is the uncle of Y if X is male and a sibling of one of Y's parents.
+uncle(X, Y) :-
+    male(X),
+    sibling(X, Z),
+    parent(Z, Y).
+
+% X is the aunt of Y if X is female and a sibling of one of Y's parents.
+aunt(X, Y) :-
+    female(X),
+    sibling(X, Z),
+    parent(Z, Y).
