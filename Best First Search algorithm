@@ -1,0 +1,42 @@
+% Edge facts: edge(Node1, Node2, Cost).
+edge(a, b, 1).
+edge(a, c, 3).
+edge(b, d, 4).
+edge(b, e, 2).
+edge(c, f, 5).
+edge(d, g, 2).
+edge(e, g, 1).
+edge(f, g, 3).
+
+% Heuristic values: h(Node, Heuristic).
+h(a, 7).
+h(b, 6).
+h(c, 5).
+h(d, 4).
+h(e, 2).
+h(f, 3).
+h(g, 0).
+
+% Best-first search algorithm
+best_first_search(Start, Goal, Path, Cost) :-
+    best_first([[Start, 0]], Goal, [], Path, Cost).
+
+% Base case: If the current node is the goal, return the path and cost
+best_first([[Goal, Cost] | _], Goal, Visited, Path, Cost) :-
+    reverse([Goal | Visited], Path).
+
+% Recursive case: Expand the current node and continue the search
+best_first([[CurrentNode, CurrentCost] | RestQueue], Goal, Visited, Path, Cost) :-
+    findall(
+        [NextNode, TotalCost],
+        (
+            edge(CurrentNode, NextNode, EdgeCost),
+            \+ member(NextNode, Visited),
+            h(NextNode, Heuristic),
+            TotalCost is CurrentCost + EdgeCost + Heuristic
+        ),
+        Children
+    ),
+    append(RestQueue, Children, NewQueue),
+    sort(2, @=<, NewQueue, SortedQueue),  % Sort by total cost (best first)
+    best_first(SortedQueue, Goal, [CurrentNode | Visited], Path, Cost).
