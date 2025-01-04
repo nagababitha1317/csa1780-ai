@@ -1,0 +1,33 @@
+% Facts: Known information
+fact(sunny).
+fact(warm).
+fact(humid).
+
+% Rules: Infer new facts based on existing ones
+rule(hot, [sunny, warm]).
+rule(beach_day, [hot, humid]).
+rule(rain_warning, [cloudy, humid]).
+rule(snow_warning, [cold, cloudy]).
+
+% Forward chaining inference
+infer(Fact) :-
+    fact(Fact),                             % If the fact is already known
+    !.                                       % Prevent backtracking
+infer(Fact) :-
+    rule(Fact, Conditions),                 % Match a rule
+    all_true(Conditions),                   % Check if all conditions are true
+    assertz(fact(Fact)).                    % Add the inferred fact to the knowledge base
+
+% Helper to check if all conditions are true
+all_true([]).
+all_true([H|T]) :-
+    fact(H),                                % Check if each condition is a fact
+    all_true(T).
+
+% Query facts
+query_fact(Fact) :-
+    infer(Fact),                            % Try to infer the fact
+    format('~w is true.~n', [Fact]),        % Print if true
+    !.
+query_fact(Fact) :-
+    format('~w is false.~n', [Fact]).       % Print if not true
