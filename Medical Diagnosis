@@ -1,0 +1,31 @@
+% Facts: Symptoms associated with diseases
+disease(flu, [fever, cough, sore_throat, fatigue]).
+disease(cold, [cough, sore_throat, runny_nose]).
+disease(covid19, [fever, cough, shortness_of_breath, loss_of_taste_smell]).
+disease(malaria, [fever, chills, sweating, headache]).
+disease(dengue, [fever, rash, joint_pain, headache, nausea]).
+disease(allergy, [sneezing, itchy_eyes, runny_nose, rash]).
+
+% Rule to diagnose based on symptoms
+diagnose(Disease, Symptoms) :-
+    disease(Disease, DiseaseSymptoms),
+    subset(Symptoms, DiseaseSymptoms).
+
+% Helper predicate: Check if all elements of a list are in another list
+subset([], _).
+subset([H|T], List) :-
+    member(H, List),
+    subset(T, List).
+
+% Rule to explain a disease
+explain(flu, "Flu is a viral infection that affects the respiratory system.").
+explain(cold, "Common cold is a mild viral infection of the nose and throat.").
+explain(covid19, "COVID-19 is a viral disease caused by SARS-CoV-2, affecting the lungs.").
+explain(malaria, "Malaria is a mosquito-borne disease caused by Plasmodium parasites.").
+explain(dengue, "Dengue is a viral infection transmitted by Aedes mosquitoes.").
+explain(allergy, "Allergy is a reaction of the immune system to substances like pollen or dust.").
+
+% Helper to display all possible symptoms
+list_all_symptoms(Symptoms) :-
+    findall(Symptom, (disease(_, DiseaseSymptoms), member(Symptom, DiseaseSymptoms)), AllSymptoms),
+    sort(AllSymptoms, Symptoms).
