@@ -1,0 +1,36 @@
+% Facts: Teacher-Subject-Subject Code relationships
+teaches(mr_smith, math, m101).
+teaches(ms_johnson, physics, p202).
+teaches(dr_brown, chemistry, c303).
+teaches(mrs_green, biology, b404).
+
+% Facts: Student-Subject relationships
+studies(john, math).
+studies(emily, physics).
+studies(james, chemistry).
+studies(sarah, biology).
+studies(alex, math).
+studies(lucy, chemistry).
+
+% Rules: Determine relationships
+
+% Rule to find the teacher of a subject
+teacher_of(Subject, Teacher) :-
+    teaches(Teacher, Subject, _).
+
+% Rule to find the subject code for a subject
+subject_code(Subject, Code) :-
+    teaches(_, Subject, Code).
+
+% Rule to find what subject a student studies
+student_subject(Student, Subject) :-
+    studies(Student, Subject).
+
+% Rule to find the teacher for a student's subject
+teacher_for_student(Student, Teacher) :-
+    studies(Student, Subject),
+    teaches(Teacher, Subject, _).
+
+% Rule to list all students for a given subject
+students_in_subject(Subject, Students) :-
+    findall(Student, studies(Student, Subject), Students).
