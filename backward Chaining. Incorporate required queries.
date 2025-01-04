@@ -1,0 +1,31 @@
+% Facts: Known information
+fact(sunny).
+fact(warm).
+fact(humid).
+
+% Rules: Define relationships between facts
+rule(hot, [sunny, warm]).
+rule(beach_day, [hot, humid]).
+rule(rain_warning, [cloudy, humid]).
+rule(snow_warning, [cold, cloudy]).
+
+% Backward chaining inference
+prove(Goal) :-
+    fact(Goal),                             % Check if the goal is already a known fact
+    !.                                      % Prevent backtracking
+prove(Goal) :-
+    rule(Goal, SubGoals),                   % Match a rule for the goal
+    prove_all(SubGoals).                    % Recursively prove all sub-goals
+
+% Helper to prove all sub-goals
+prove_all([]).                              % Base case: no sub-goals left
+prove_all([H|T]) :-
+    prove(H),                               % Prove the head of the list
+    prove_all(T).                           % Recursively prove the tail
+
+% Query facts
+query_fact(Goal) :-
+    (prove(Goal) -> 
+        format('~w is true.~n', [Goal]) ;   % If proven, print true
+        format('~w is false.~n', [Goal])   % Otherwise, print false
+    ).
