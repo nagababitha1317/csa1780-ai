@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding HTML Tags in Blogging</title>
+</head>
+<body>
+    <!-- Blog Title -->
+    <h1>Understanding HTML Tags in Blogging</h1>
+
+    <!-- Introduction -->
+    <p>
+        Welcome to this tutorial on HTML tags used in blogging! Here, we’ll explore essential tags like anchor tags, title tags, and more.
+    </p>
+
+    <!-- Anchor Tag Example -->
+    <h2>What is an Anchor Tag?</h2>
+    <p>
+        An <strong>anchor tag</strong> (<code>&lt;a&gt;</code>) is used to create hyperlinks in HTML. Here’s an example:
+    </p>
+    <p>
+        Visit <a href="https://www.w3schools.com" target="_blank" title="W3Schools Online Tutorials">W3Schools</a> to learn more about HTML.
+    </p>
+
+    <!-- Image Example -->
+    <h2>Adding Images with Alt Text</h2>
+    <p>Images make your blog more appealing. Here’s an example of an image with alt text:</p>
+    <img src="https://via.placeholder.com/600x300" alt="Placeholder image for demonstration" width="600">
+
+    <!-- Table Example -->
+    <h2>Using Tables to Organize Information</h2>
+    <p>HTML tables can be used to present data in a structured format. Below is an example:</p>
+    <table border="1" cellspacing="0" cellpadding="10">
+        <tr>
+            <th>Tag</th>
+            <th>Purpose</th>
+        </tr>
+        <tr>
+            <td>&lt;a&gt;</td>
+            <td>Defines a hyperlink</td>
+        </tr>
+        <tr>
+            <td>&lt;title&gt;</td>
+            <td>Defines the title of the web page</td>
+        </tr>
+        <tr>
+            <td>&lt;img&gt;</td>
+            <td>Defines an image</td>
+        </tr>
+    </table>
+
+    <!-- Lists Example -->
+    <h2>Creating Lists</h2>
+    <p>Lists are useful for summarizing points. HTML supports ordered and unordered lists:</p>
+    <h3>Unordered List</h3>
+    <ul>
+        <li>Anchor Tag</li>
+        <li>Title Tag</li>
+        <li>Image Tag</li>
+    </ul>
+    <h3>Ordered List</h3>
+    <ol>
+        <li>Heading Tags</li>
+        <li>Paragraph Tags</li>
+        <li>List Tags</li>
+    </ol>
+
+    <!-- Footer -->
+    <h2>Conclusion</h2>
+    <p>
+        HTML tags are fundamental to web development and blogging. Practice using these tags to make your blogs more interactive and well-structured.
+    </p>
+    <p>
+        For more resources, check out <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" title="MDN HTML Documentation">MDN Web Docs</a>.
+    </p>
+</body>
+</html>
