@@ -1,0 +1,39 @@
+% Facts: Planet(Name, OrderFromSun, Type, Size, HasRings).
+% Type: terrestrial, gas_giant, ice_giant, dwarf.
+% Size: small, medium, large.
+
+planet(mercury, 1, terrestrial, small, no).
+planet(venus, 2, terrestrial, small, no).
+planet(earth, 3, terrestrial, small, no).
+planet(mars, 4, terrestrial, small, no).
+planet(jupiter, 5, gas_giant, large, yes).
+planet(saturn, 6, gas_giant, large, yes).
+planet(uranus, 7, ice_giant, medium, yes).
+planet(neptune, 8, ice_giant, medium, yes).
+planet(pluto, 9, dwarf, small, no).
+
+% Rules: Logical relationships
+
+% Rule to find planets by type
+planets_by_type(Type, Planets) :-
+    findall(Planet, planet(Planet, _, Type, _, _), Planets).
+
+% Rule to find planets by size
+planets_by_size(Size, Planets) :-
+    findall(Planet, planet(Planet, _, _, Size, _), Planets).
+
+% Rule to find planets with rings
+planets_with_rings(Planets) :-
+    findall(Planet, planet(Planet, _, _, _, yes), Planets).
+
+% Rule to get planet details by name
+planet_details(Name, Order, Type, Size, HasRings) :-
+    planet(Name, Order, Type, Size, HasRings).
+
+% Rule to find planets closer to the Sun than a given order
+planets_closer_than(Order, Planets) :-
+    findall(Planet, (planet(Planet, O, _, _, _), O < Order), Planets).
+
+% Rule to find planets farther from the Sun than a given order
+planets_farther_than(Order, Planets) :-
+    findall(Planet, (planet(Planet, O, _, _, _), O > Order), Planets).
